@@ -75,3 +75,20 @@
   opacity: 1;
   right: 0;
 }
+
+#successH1 {
+  animation-name: example;
+  animation-duration: 4s;
+  max-height: 50px;
+}
+@keyframes example {
+  0% {
+    opacity: 0;
+    position: absolute;
+    bottom: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
