@@ -59,13 +59,12 @@ app.post("/upload", upload.single("image"), (req, res, next) => {
   });
 });
 app.get("/api/news", async (req, res) => {
-  const data = await News.find()
+  const data = await News.find();
   // .sort({ createdAt: -1 });
   res.status(200).json(data);
 });
 app.delete("/api/:id", async (req, res) => {
   try {
-
     await News.findByIdAndDelete(req.params.id);
     res.status(200).json({ success: true });
   } catch (error) {
@@ -79,6 +78,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log(`server listening on port`);
 });
