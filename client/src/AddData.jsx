@@ -43,10 +43,14 @@ function AddData() {
           "Access-Control-Allow-Origin": "*",
         },
       });
+      toast.success("Added Successfully", {
+        autoClose: 2000,
+        position: toast.POSITION.TOP_CENTER,
+      });
       setDetails("");
+      getAllBooks();
       setTitle("");
       setFile("");
-      getAllBooks();
     } catch (error) {
       console.log(error.response);
     }
@@ -136,9 +140,9 @@ function AddData() {
                         scope="col"
                         className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
                       >
-                        Image 
+                        Image
                       </th>
-                      
+
                       <th
                         scope="col"
                         className="text-sm font-medium text-gray-900 px-6 py-4 text-left"

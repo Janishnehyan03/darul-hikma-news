@@ -65,12 +65,7 @@ app.get("/api/news", async (req, res) => {
 });
 app.delete("/api/:id", async (req, res) => {
   try {
-    // delete file from folder
-    // let data = await News.findById(req.params.id);
-    // fs.unlinkSync(
-    //   path.join(__dirname + "/uploads/" + path + req.params.id)
-    // );
-    // delete from db
+
     await News.findByIdAndDelete(req.params.id);
     res.status(200).json({ success: true });
   } catch (error) {

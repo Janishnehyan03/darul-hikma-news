@@ -7,7 +7,7 @@ import { Buffer } from "buffer";
 function Carousel() {
   const [current, setCurrent] = useState(0);
   const [posters, setPosters] = useState([]);
-  
+
   const getAllPosters = async () => {
     let res = await Axios.get("/news");
     setPosters(res.data);
@@ -19,7 +19,7 @@ function Carousel() {
         setCurrent((prevIndex) =>
           prevIndex === posters.length - 1 ? 0 : prevIndex + 1
         ),
-      5000
+      8000
     );
 
     return () => {};
