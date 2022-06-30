@@ -1,17 +1,19 @@
 /* import poppins font family and roboto */
 @import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700");
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700");
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;700&family=Smooch&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;700&family=Smooch&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
+.btnBody {
+  background-color: black;
+}
 /* custom styles */
 #title-head {
-  font-family: 'Dancing Script', cursive;
-  font-family: 'Smooch', cursive;
+  font-family: "Dancing Script", cursive;
+  font-family: "Smooch", cursive;
   font-size: 2rem;
   line-height: 12px;
 }
@@ -20,20 +22,56 @@
   position: relative;
 }
 
-
-
 #overlay {
   position: absolute;
-  top:0px;
+  top: 0px;
   background: rgb(0, 0, 0);
   background: rgba(0, 0, 0, 0.6);
   /* Black see-through */
   color: #f1f1f1;
   width: 100%;
-  transition: .5s ease;
+  transition: 0.5s ease;
   opacity: 1;
   color: white;
   font-size: 20px;
   padding: 50px;
   text-align: center;
+}
+.button {
+  border-radius: 4px;
+  background-color: #19a589;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: "\00bb";
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
 }
