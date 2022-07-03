@@ -9,14 +9,32 @@ import { Buffer } from "buffer";
 function AddData() {
   const [loading, setLoading] = useState(false);
 
-  const [title, setTitle] = useState("");
-  const [details, setDetails] = useState("");
-  const [file, setFile] = useState(null);
   const [books, setBooks] = useState([]);
+  const [img, setImg] = useState("");
+
+  const sendToCloudinary = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", img);
+      formData.append("upload_preset", "mern-chat");
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/mern-chat/image/upload",
+        formData
+      );
+      const { secure_url } = res.data;
+      setImg(secure_url);
+      setLoading(false);
+      return res.data.secure_url;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getAllBooks = async () => {
     let res = await Axios.get("/news");
-    console.log(res.data);
+
     // get firebase data
     setBooks(res.data);
     setLoading(false);
@@ -28,31 +46,27 @@ function AddData() {
 
   const addNews = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("image", file);
-    formData.append("title", title);
-    formData.append("details", details);
-    try {
-      let data = await axios({
-        url: `http://localhost:3000/upload`,
-        method: "POST",
-        data: formData,
-        withCredentials: true,
-        headers: {
-          "content-type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
-      toast.success("Added Successfully", {
-        autoClose: 2000,
-        position: toast.POSITION.TOP_CENTER,
-      });
-      setDetails("");
-      getAllBooks();
-      setTitle("");
-      setFile("");
-    } catch (error) {
-      console.log(error.response);
+    setLoading(true);
+    let cloudData = await sendToCloudinary(e);
+
+    if (cloudData) {
+      try {
+        let data = await Axios.post("/upload", {
+          img: cloudData,
+        });
+        if (data) {
+          toast.success("Added Successfully", {
+            autoClose: 2000,
+            position: toast.POSITION.TOP_CENTER,
+          });
+          setLoading(false);
+          setImg(null);
+          getAllBooks()
+        }
+      } catch (error) {
+        setLoading(false);
+        console.log(error.response);
+      }
     }
   };
   const deleteNews = async (id) => {
@@ -85,8 +99,9 @@ function AddData() {
                         Thumbnail
                       </label>
                       <input
-                        onChange={(e) => setFile(e.target.files[0])}
+                        // onChange={(e) => setFile(e.target.files[0])}
                         type="file"
+                        onChange={(e) => setImg(e.target.files[0])}
                         autoComplete="given-name"
                         className="text-sm text-grey-500
                         file:mr-5 file:py-3 file:px-10
@@ -156,21 +171,13 @@ function AddData() {
                       <CircularProgress />
                     ) : (
                       books.map((book, index) => (
-                        <tr className="bg-white border-b">
+                        <tr className="bg-white border-b" key={index}>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {index + 1}
                           </td>
 
                           <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                            <img
-                              src={`data:${
-                                book.img.contentType
-                              };base64, ${Buffer.from(book.img.data).toString(
-                                "base64"
-                              )}`}
-                              alt=""
-                              className="h-20"
-                            />
+                            <img src={book.img} alt="" className="h-20" />
                           </td>
                           <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                             <button

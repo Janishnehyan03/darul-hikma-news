@@ -25,45 +25,22 @@ mongoose.connect(
   }
 );
 
-// multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.fieldname + "-" + Date.now());
-  },
-});
 
-const upload = multer({ storage: storage });
-
-app.post("/upload", upload.single("image"), (req, res, next) => {
-  const obj = {
-    img: {
-      data: fs.readFileSync(
-        path.join(__dirname + "/uploads/" + req.file.filename)
-      ),
-      contentType: "image/png",
-    },
-  };
-  News.create(obj, (err, item) => {
-    if (err) {
-      console.log(err);
-    } else {
-      // item.save();
-      res.status(200).json({
-        success: true,
-        item,
-      });
-    }
-  });
+app.post("/upload", async (req, res, next) => {
+  console.log(req.body);
+  try {
+    let data = await News.create(req.body);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json(error);
+  }
 });
-app.get("/api/news", async (req, res) => {
+app.get("/news", async (req, res) => {
   const data = await News.find();
   // .sort({ createdAt: -1 });
   res.status(200).json(data);
 });
-app.delete("/api/:id", async (req, res) => {
+app.delete("/:id", async (req, res) => {
   try {
     await News.findByIdAndDelete(req.params.id);
     res.status(200).json({ success: true });

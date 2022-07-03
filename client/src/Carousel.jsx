@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Axios from "./Axios";
 import { Buffer } from "buffer";
+import { CircularProgress } from "@material-ui/core";
 
 function Carousel() {
   const [current, setCurrent] = useState(0);
@@ -19,7 +20,7 @@ function Carousel() {
         setCurrent((prevIndex) =>
           prevIndex === posters.length - 1 ? 0 : prevIndex + 1
         ),
-      8000
+      10000
     );
 
     return () => {};
@@ -29,18 +30,13 @@ function Carousel() {
     getAllPosters();
   }, []);
   return (
-    <div id="container">
-      {posters.length > 0 && (
+    <div id="container" className="w-full h-screen">
+      {posters.length > 0 ? (
         <>
-          <img
-            className="w-full h-screen"
-            src={`data:${
-              posters[current].img.contentType
-            };base64, ${Buffer.from(posters[current].img.data).toString(
-              "base64"
-            )}`}
-          />
+          <img className="w-full h-screen" src={posters[current].img} />
         </>
+      ) : (
+        <CircularProgress />
       )}
     </div>
   );
