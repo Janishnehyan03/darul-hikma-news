@@ -30,10 +30,20 @@ function Carousel() {
     getAllPosters();
   }, []);
   return (
-    <div id="container" className="w-full h-screen">
+    <div id="container" className="h-[100vh] w-screen">
       {posters.length > 0 ? (
         <>
-          <img className="w-full h-screen" src={posters[current].img} />
+          <div
+            style={{
+              backgroundImage: `url("${posters[current].img}")`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              height:"100%",
+              width:"100%"
+            }}
+          >
+         
+          </div>
         </>
       ) : (
         <CircularProgress />
