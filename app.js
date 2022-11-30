@@ -3,28 +3,27 @@ const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const multer = require("multer");
 const News = require("./model");
 const cors = require("cors");
 const morgan = require("morgan");
 
-const fs = require("fs");
+
 const path = require("path");
 dotenv.config();
 
+console.log(process.env.NODE_ENV);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors({ origin: true, credentials: true }));
 app.use(morgan("dev"));
 
 mongoose.connect(
-  process.env.MONGO_URL,
+  process.env.MONGO_URI,
   { useNewUrlParser: true, useUnifiedTopology: true },
   (err) => {
     console.log("connected");
   }
 );
-
 
 app.post("/upload", async (req, res, next) => {
   console.log(req.body);
@@ -49,12 +48,13 @@ app.delete("/:id", async (req, res) => {
     res.status(400).json({ error });
   }
 });
-if (process.env.NODE_ENV === "production") {
+
   app.use(express.static(path.join(__dirname, "client/build")));
   app.get("*", function (req, res) {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
-}
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`server listening on port`);
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`server listening on port`, port);
 });
